@@ -2,19 +2,18 @@ const express = require('express');
 const sequelize = require('./config/database');
 
 // Importar modelos
-const Rol = require('./models/Rol');
+require('./models');
 
 // Importar rutas
 const rolRoutes = require('./routes/rolRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes');
 
 const app = express();
 
 // Middleware para recibir JSON
 app.use(express.json());
 
-// ========================================
 // RUTA PRINCIPAL
-// ========================================
 
 app.get('/', (req, res) => {
     res.json({
@@ -22,15 +21,12 @@ app.get('/', (req, res) => {
     });
 });
 
-// ========================================
 // RUTAS
-// ========================================
 
 app.use('/api/roles', rolRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 
-// ========================================
 // INICIAR SERVIDOR
-// ========================================
 
 async function iniciarServidor() {
 
