@@ -1,42 +1,42 @@
-const {Datatypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Medidor = sequelize.define('Medidor', {
 
     id_medidor: {
-        type: Datatypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
 
     id_recurso: {
-        type: Datatypes.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
 
     id_area: {
-        type: Datatypes.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
 
     codigo: {
-        type: Datatypes.STRING(100),
+        type: DataTypes.STRING(100),
         allowNull: false
     },  
 
     nombre: {
-        type: Datatypes.STRING(100),
+        type: DataTypes.STRING(100),
         allowNull: false,
     },
 
     fecha_instalacion: {
-        type: Datatypes.DATE,
+        type: DataTypes.DATE,
         allowNull: false, 
-        defaultValue: Datatypes.NOW
+        defaultValue: DataTypes.NOW
     },
 
     activo: {
-        type: Datatypes.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true
     }

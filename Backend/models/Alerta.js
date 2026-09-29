@@ -1,54 +1,54 @@
-const {dataTypes} = require('sequelize');
+const {DataTypes} = require('sequelize');
 const sequelize = require('../config/database');
 
 const Alerta = sequelize.define('Alerta', {
 
     id_alerta: {
-        type: dataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     }, 
 
     id_lectura: {
-        type: dataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
 
     id_usuario: {
-        type: dataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
 
     tipo: {
-        type: dataTypes.STRING(50),
+        type: DataTypes.STRING(50),
         allowNull: false
     },
 
     descripcion: {
-        type: dataTypes.STRING(255),
+        type: DataTypes.STRING(255),
         allowNull: false
     },
 
     estado : {
-        type: dataTypes.ENUM('NUEVA', 'EN ATENCION', 'RESUELTA', 'DESCARTADA'),
+        type: DataTypes.ENUM('NUEVA', 'EN ATENCION', 'RESUELTA', 'DESCARTADA'),
         allowNull: false,
         defaultValue: 'NUEVA'   
     },
 
     nivel: {
-        type: dataTypes.ENUM('BAJO', 'MEDIO', 'ALTO', 'CRITICO'),
+        type: DataTypes.ENUM('BAJO', 'MEDIO', 'ALTO', 'CRITICO'),
         allowNull: false,
         defaultValue: 'MEDIO'
     },
 
     fecha_generacion: {
-        type: dataTypes.DATE,
+        type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: dataTypes.NOW
+        defaultValue: DataTypes.NOW
     },
 
     fecha_resolucion: {
-        type: dataTypes.DATE,
+        type: DataTypes.DATE,
         allowNull: true
     },
 }, {

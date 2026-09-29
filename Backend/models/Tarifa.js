@@ -15,7 +15,7 @@ const Tarifa = sequelize.define('Tarifa', {
     },
 
     precio_unitario: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false
     },
 

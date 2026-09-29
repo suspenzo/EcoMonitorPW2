@@ -7,6 +7,16 @@ require('./models');
 // Importar rutas
 const rolRoutes = require('./routes/rolRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const alertaRoutes = require('./routes/alertaRoutes');
+const areaRoutes = require('./routes/areaRoutes');
+const incidenteRoutes = require('./routes/incidenteRoutes');
+const lecturaRoutes = require('./routes/lecturaRoutes');
+const medidorRoutes = require('./routes/medidorRoutes');
+const metaRoutes = require('./routes/metaRoutes');
+const permisoRoutes = require('./routes/permisoRoutes');
+const recursoRoutes = require ('./routes/RecursoRoutes');
+const rol_permisoRoutes = require ('./routes/rol_permisoRoutes');
+const tarifaRoutes = require ('./routes/tarifaRoutes');
 
 const app = express();
 
@@ -25,6 +35,16 @@ app.get('/', (req, res) => {
 
 app.use('/api/roles', rolRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/alertas', alertaRoutes);
+app.use('/api/areas', areaRoutes);
+app.use('/api/incidentes', incidenteRoutes);
+app.use('/api/lecturas', lecturaRoutes);
+app.use('/api/medidores', medidorRoutes);
+app.use('/api/metas', metaRoutes);
+app.use('/api/permisos', permisoRoutes);
+app.use('/api/recursos', recursoRoutes);
+app.use('/api/rol_permisos', rol_permisoRoutes);
+app.use('/api/tarifas', tarifaRoutes);
 
 // INICIAR SERVIDOR
 

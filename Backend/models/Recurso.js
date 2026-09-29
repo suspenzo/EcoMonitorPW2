@@ -10,7 +10,7 @@ const Recurso = sequelize.define('Recurso', {
     },
 
     nombre: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(50),
         allowNull: false
     },
 
