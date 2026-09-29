@@ -1,9 +1,5 @@
 const Rol = require('../models/Rol');
 
-// ========================================
-// OBTENER TODOS LOS ROLES
-// ========================================
-
 const obtenerRoles = async (req, res) => {
 
     try {
@@ -24,11 +20,6 @@ const obtenerRoles = async (req, res) => {
     }
 
 };
-
-
-// ========================================
-// OBTENER UN ROL POR ID
-// ========================================
 
 const obtenerRolPorId = async (req, res) => {
 
@@ -60,11 +51,6 @@ const obtenerRolPorId = async (req, res) => {
     }
 
 };
-
-
-// ========================================
-// CREAR ROL
-// ========================================
 
 const crearRol = async (req, res) => {
 
@@ -104,11 +90,6 @@ const crearRol = async (req, res) => {
     }
 
 };
-
-
-// ========================================
-// ACTUALIZAR ROL
-// ========================================
 
 const actualizarRol = async (req, res) => {
 
@@ -152,11 +133,6 @@ const actualizarRol = async (req, res) => {
 
 };
 
-
-// ========================================
-// ELIMINAR ROL
-// ========================================
-
 const eliminarRol = async (req, res) => {
 
     try {
@@ -192,10 +168,6 @@ const eliminarRol = async (req, res) => {
 
 };
 
-
-// ========================================
-// EXPORTAR FUNCIONES
-// ========================================
 
 module.exports = {
     obtenerRoles,
