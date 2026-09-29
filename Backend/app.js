@@ -1,5 +1,14 @@
 const express = require('express');
 const sequelize = require('./config/database');
+const cors = require('cors');
+
+const app = express();
+
+// Permitir peticiones desde el frontend
+app.use(cors({
+    origin: 'http://localhost:5173', // puerto por defecto de Vite
+    credentials: true
+}));
 
 // Importar modelos
 require('./models');
@@ -18,7 +27,6 @@ const recursoRoutes = require ('./routes/RecursoRoutes');
 const rol_permisoRoutes = require ('./routes/rol_permisoRoutes');
 const tarifaRoutes = require ('./routes/tarifaRoutes');
 
-const app = express();
 
 // Middleware para recibir JSON
 app.use(express.json());
