@@ -8,7 +8,8 @@ import {
   Bullseye,
   PersonCircle,
   Tree,
-  Calculator
+  Calculator,
+  Building
 } from 'react-bootstrap-icons';
 
 import DashboardPage from './pages/DashboardPage';
@@ -17,6 +18,7 @@ import CargaLecturasPage from './pages/CargaLecturasPage';
 import AlertasPage from './pages/AlertasPage';
 import MetasPage from './pages/MetasPage';
 import SimuladorPage from './pages/SimuladorPage';
+import AreasPage from './pages/AreasPage';
 
 import {
   alertasAPI, areasAPI, lecturasAPI, medidoresAPI,
@@ -100,6 +102,52 @@ export default function App() {
     cargarTodo();
   }, [cargarTodo]);
 
+
+
+    // ============ HANDLER: AGREGAR ÁREA ============
+  const handleAgregarArea = async (nuevaArea) => {
+    try {
+      await areasAPI.create({
+        nombre: nuevaArea.nombre,
+        descripcion: nuevaArea.descripcion,
+        activo: nuevaArea.activo
+      });
+      toast.success(`Área "${nuevaArea.nombre}" registrada correctamente.`);
+      await cargarTodo();
+    } catch (error) {
+      toast.error(error.response?.data?.mensaje || 'Error al registrar el área.');
+    }
+  };
+
+  // ============ HANDLER: ACTUALIZAR ÁREA ============
+  const handleActualizarArea = async (idArea, datos) => {
+    try {
+      await areasAPI.update(idArea, {
+        nombre: datos.nombre,
+        descripcion: datos.descripcion,
+        activo: datos.activo
+      });
+      toast.success(`Área "${datos.nombre}" actualizada correctamente.`);
+      await cargarTodo();
+    } catch (error) {
+      toast.error(error.response?.data?.mensaje || 'Error al actualizar el área.');
+    }
+  };
+
+  // ============ HANDLER: ELIMINAR ÁREA ============
+  const handleEliminarArea = async (idArea) => {
+    try {
+      await areasAPI.delete(idArea);
+      toast.success('Área eliminada correctamente.');
+      await cargarTodo();
+    } catch (error) {
+      // Si tiene FKs (medidores, incidentes, metas), el backend devolverá un error
+      toast.error(
+        error.response?.data?.mensaje ||
+        'No se puede eliminar: el área tiene registros asociados.'
+      );
+    }
+  };
   // ============ HANDLER: AGREGAR MEDIDOR ============
   const handleAgregarMedidor = async (nuevo) => {
     try {
@@ -252,6 +300,7 @@ export default function App() {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <Speedometer2 className="inline mr-2 text-base" /> },
+      { id: 'areas', label: 'Áreas', icon: <Building className="inline mr-2 text-base" /> },  // ← NUEVO
     { id: 'medidores', label: 'Medidores', icon: <LightningCharge className="inline mr-2 text-base" /> },
     { id: 'carga', label: 'Carga Lecturas', icon: <BoxArrowInDown className="inline mr-2 text-base" /> },
     { id: 'alertas', label: 'Alertas', icon: <ExclamationTriangle className="inline mr-2 text-base" /> },
@@ -309,6 +358,11 @@ export default function App() {
           {activeTab === 'alertas' && <AlertasPage alertas={alertas} onCambiarEstado={handleCambiarEstadoAlerta} />}
           {activeTab === 'metas' && <MetasPage metas={metas} onAgregarMeta={handleAgregarMeta} />}
           {activeTab === 'simulador' && <SimuladorPage />}
+          {activeTab === 'areas' && ( <AreasPage   areas={areas} onAgregarArea={handleAgregarArea} 
+          onActualizarArea={handleActualizarArea}
+                onEliminarArea={handleEliminarArea}
+              />
+            )}
         </main>
       </div>
     </div>
