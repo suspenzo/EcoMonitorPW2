@@ -23,9 +23,9 @@ export const usuariosAPI = crud('usuarios');
 
 // Endpoint especial para rol_permiso
 export const rolPermisosAPI = {
-    getAll: () => api.get('/rol-permisos').then(r => r.data),
-    create: (data) => api.post('/rol-permisos', data).then(r => r.data),
-    delete: (id_rol, id_permiso) => api.delete(`/rol-permisos/${id_rol}/${id_permiso}`).then(r => r.data)
+    getAll: () => api.get('/rol_permisos').then(r => r.data),
+    create: (data) => api.post('/rol_permisos', data).then(r => r.data),
+    delete: (id_rol, id_permiso) => api.delete(`/rol_permisos/${id_rol}/${id_permiso}`).then(r => r.data)
 };
 
 export const umbralesAPI = crud('umbrales');
