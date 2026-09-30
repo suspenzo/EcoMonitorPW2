@@ -446,15 +446,19 @@ function RolPermisoTab({ rolPermisos, roles, permisos, api, onRefresh }) {
 function UsuariosTab({ usuarios, roles, api, onRefresh }) {
   const [modal, setModal] = useState(false);
   const [edicion, setEdicion] = useState(null);
-  const emptyForm = { id_rol: '', nombre: '', apellido: '', usuario: '', correo: '', password_hash: '', activo: true };
-  const [form, setForm] = useState(emptyForm);
+ const emptyForm = { 
+  id_rol: '', nombre: '', apellido: '', usuario: '', correo: '', 
+  password: '',        // ← antes: password_hash
+  activo: true 
+};
+const [form, setForm] = useState(emptyForm);
 
   const abrirNuevo = () => { setEdicion(null); setForm({ ...emptyForm, id_rol: roles[0]?.id_rol || '' }); setModal(true); };
   const abrirEditar = (u) => {
     setEdicion(u);
     setForm({
       id_rol: u.id_rol, nombre: u.nombre, apellido: u.apellido || '', usuario: u.usuario,
-      correo: u.correo, password_hash: '', activo: u.activo
+      correo: u.correo, password: '', activo: u.activo
     });
     setModal(true);
   };
@@ -463,7 +467,7 @@ function UsuariosTab({ usuarios, roles, api, onRefresh }) {
     e.preventDefault();
     const payload = { ...form, id_rol: Number(form.id_rol) };
     // Si editamos y no cambian la contraseña, no la enviamos
-    if (edicion && !payload.password_hash) delete payload.password_hash;
+    if (edicion && !payload.password) delete payload.password;
 
     try {
       if (edicion) await api.update(edicion.id_usuario, payload);
@@ -512,10 +516,10 @@ function UsuariosTab({ usuarios, roles, api, onRefresh }) {
             <Input
               label={edicion ? 'Nueva Contraseña (opcional)' : 'Contraseña'}
               type="password" required={!edicion}
-              value={form.password_hash}
+              value={form.password}
               onChange={e => setForm({ ...form, password_hash: e.target.value })}
             />
-            <CheckActivo value={form.activo} onChange={(v) => setForm({ ...form, activo: v })} />
+            <CheckActivo value={form.activo} onChange={e => setForm({ ...form, password: e.target.value })} />
             <FormActions onCancelar={() => setModal(false)} textoGuardar={edicion ? 'Guardar cambios' : 'Crear usuario'} />
           </form>
         </Modal>
