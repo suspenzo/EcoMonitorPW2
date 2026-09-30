@@ -373,7 +373,15 @@ const [umbrales, setUmbrales] = useState([]);
         </nav>
 
         <main className="p-6 bg-slate-50">
-          {activeTab === 'dashboard' && <DashboardPage medidores={medidores} />}
+          {activeTab === 'dashboard' && (
+  <DashboardPage
+    medidores={medidores}
+    alertas={alertas}
+    tarifas={tarifas}
+    lecturas={lecturasCrudas}
+    recursos={recursos}
+  />
+)}
           {activeTab === 'medidores' && <MedidoresPage medidores={medidores} areas={areas} onAgregarMedidor={handleAgregarMedidor} />}
           {activeTab === 'carga' && <CargaLecturasPage medidores={medidores} onGuardarLectura={handleActualizarLectura} />}
           {activeTab === 'alertas' && <AlertasPage alertas={alertas} onCambiarEstado={handleCambiarEstadoAlerta} />}
