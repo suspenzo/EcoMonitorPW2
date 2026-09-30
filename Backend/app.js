@@ -14,18 +14,18 @@ app.use(cors({
 require('./models');
 
 // Importar rutas
-const rolRoutes = require('./routes/rolRoutes');
-const usuarioRoutes = require('./routes/usuarioRoutes');
-const alertaRoutes = require('./routes/alertaRoutes');
-const areaRoutes = require('./routes/areaRoutes');
-const incidenteRoutes = require('./routes/incidenteRoutes');
-const lecturaRoutes = require('./routes/lecturaRoutes');
-const medidorRoutes = require('./routes/medidorRoutes');
-const metaRoutes = require('./routes/metaRoutes');
-const permisoRoutes = require('./routes/permisoRoutes');
-const recursoRoutes = require ('./routes/RecursoRoutes');
-const rol_permisoRoutes = require ('./routes/rol_permisoRoutes');
-const tarifaRoutes = require ('./routes/tarifaRoutes');
+const rolRoutes = require('./Routes/RolRoutes');
+const usuarioRoutes = require('./Routes/UsuarioRoutes');
+const alertaRoutes = require('./Routes/AlertaRoutes');
+const areaRoutes = require('./Routes/AreaRoutes');
+const incidenteRoutes = require('./Routes/IncidenteRoutes');
+const lecturaRoutes = require('./Routes/LecturaRoutes');
+const medidorRoutes = require('./Routes/MedidorRoutes');
+const metaRoutes = require('./Routes/MetaRoutes');
+const permisoRoutes = require('./Routes/PermisoRoutes');
+const recursoRoutes = require ('./Routes/RecursoRoutes');
+const rol_permisoRoutes = require ('./Routes/Rol_PermisoRoutes');
+const tarifaRoutes = require ('./Routes/TarifaRoutes');
 
 
 // Middleware para recibir JSON

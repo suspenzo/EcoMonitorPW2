@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Servicio 1: Base de datos MySQL
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: ecomonitor
+
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Servicio 2: Backend Node.js
+  backend:
+    build: ./Backend
+    container_name: node_backend
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: 123456
+      DB_NAME: ecomonitor
+      PORT: 4000
+    depends_on:
+      - db
+
+  # Servicio 3: Frontend React (Vite)
+  frontend:
+    build: ./Frontend
+    container_name: react_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

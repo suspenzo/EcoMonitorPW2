@@ -1,0 +1,22 @@
+# Etapa 1: Construcción del build estático de Vite
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+# Etapa 2: Servir los archivos con Nginx
+FROM nginx:alpine
+
+# Copiar los archivos compilados al directorio de Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Exponer el puerto estándar de web
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

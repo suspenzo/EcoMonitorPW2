@@ -1,0 +1,15 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copiar archivos de dependencias e instalar
+COPY package*.json ./
+RUN npm install
+
+# Copiar el resto del código del backend
+COPY . .
+
+# Exponer el puerto donde corre tu servidor Express/Node
+EXPOSE 4000
+
+CMD ["node", "app.js"]
