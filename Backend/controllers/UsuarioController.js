@@ -62,19 +62,19 @@ const crearUsuario = async (req, res) => {
             apellido,
             usuario,
             correo,
-            password,
+            password_hash,
             activo
         } = req.body;
 
         // Verificar que se haya enviado una contraseña
-        if (!password) {
+        if (!password_hash) {
             return res.status(400).json({
                 mensaje: 'La contraseña es obligatoria'
             });
         }
 
         // Generar hash de la contraseña
-        const password_hash = await bcrypt.hash(password, 10);
+        password_hash = await bcrypt.hash(password_hash, 10);
 
         // Crear usuario en la base de datos
         const nuevoUsuario = await Usuario.create({
