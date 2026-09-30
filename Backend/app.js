@@ -7,10 +7,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 // Permitir peticiones desde el frontend
-app.use(cors({
-    origin: 'http://localhost:5173', // puerto por defecto de Vite
-    credentials: true
-}));
+app.use(cors());
 
 // Importar modelos
 require('./models');
