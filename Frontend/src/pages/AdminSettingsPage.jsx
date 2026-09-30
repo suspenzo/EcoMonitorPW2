@@ -517,9 +517,9 @@ const [form, setForm] = useState(emptyForm);
               label={edicion ? 'Nueva Contraseña (opcional)' : 'Contraseña'}
               type="password" required={!edicion}
               value={form.password}
-              onChange={e => setForm({ ...form, password_hash: e.target.value })}
+              onChange={e => setForm({ ...form, password: e.target.value })}
             />
-            <CheckActivo value={form.activo} onChange={e => setForm({ ...form, password: e.target.value })} />
+            <CheckActivo value={form.activo} onChange={(v) => setForm({ ...form, activo: v })}  />
             <FormActions onCancelar={() => setModal(false)} textoGuardar={edicion ? 'Guardar cambios' : 'Crear usuario'} />
           </form>
         </Modal>
