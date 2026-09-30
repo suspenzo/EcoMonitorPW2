@@ -12,10 +12,6 @@ app.use(cors());
 // Importar modelos
 require('./models');
 
-sequelize.sync({ alter: true })
-    .then(() => console.log('✅ Tablas sincronizadas con la BD'))
-    .catch(err => console.error('❌ Error al sincronizar:', err));
-
 // Importar rutas
 const rolRoutes = require('./Routes/RolRoutes');
 const usuarioRoutes = require('./Routes/UsuarioRoutes');
