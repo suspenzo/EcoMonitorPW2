@@ -1,34 +1,42 @@
-import React, { useState } from 'react';
-import { 
-  LightningCharge, 
-  Droplet, 
-  PlusLg, 
-  Search, 
-  Funnel, 
-  XLg, 
-  CheckCircleFill, 
-  ExclamationTriangleFill, 
-  Tools 
+import React, { useState, useEffect } from 'react';
+import {
+  LightningCharge,
+  Droplet,
+  PlusLg,
+  Search,
+  Funnel,
+  XLg,
+  CheckCircleFill,
+  ExclamationTriangleFill,
+  Tools,
+  GeoAlt
 } from 'react-bootstrap-icons';
 
-export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
+export default function MedidoresPage({ medidores = [], areas = [], onAgregarMedidor }) {
   const [busqueda, setBusqueda] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('TODOS');
   const [filtroEstado, setFiltroEstado] = useState('TODOS');
   const [modalAbierto, setModalAbierto] = useState(false);
 
-  // Formulario para registro
+  // Formulario para registro — ahora guardamos id_area en lugar de texto libre
   const [formData, setFormData] = useState({
     codigo: '',
     tipo_recurso: 'ENERGIA',
-    ubicacion: '',
+    id_area: '',              // ← cambio clave
     ultima_lectura: '',
     estado: 'ACTIVO'
   });
 
-  // Filtros dinámicos en tiempo real
+  // Cuando se abre el modal y aún no hay id_area, seleccionamos la primera área
+  useEffect(() => {
+    if (modalAbierto && !formData.id_area && areas.length > 0) {
+      setFormData((prev) => ({ ...prev, id_area: areas[0].id_area }));
+    }
+  }, [modalAbierto, areas, formData.id_area]);
+
+  // Filtros dinámicos
   const medidoresFiltrados = medidores.filter((m) => {
-    const coincideBusqueda = 
+    const coincideBusqueda =
       m.codigo.toLowerCase().includes(busqueda.toLowerCase()) ||
       m.ubicacion.toLowerCase().includes(busqueda.toLowerCase());
     const coincideTipo = filtroTipo === 'TODOS' || m.tipo_recurso === filtroTipo;
@@ -44,21 +52,40 @@ export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.id_area) {
+      alert('Debes seleccionar un área. Si no hay áreas creadas, registra una primero.');
+      return;
+    }
+
     if (onAgregarMedidor) {
       onAgregarMedidor({
         ...formData,
+        id_area: Number(formData.id_area),
         ultima_lectura: parseFloat(formData.ultima_lectura) || 0,
         unidad: formData.tipo_recurso === 'ENERGIA' ? 'kWh' : 'm³'
       });
     }
+
     setFormData({
       codigo: '',
       tipo_recurso: 'ENERGIA',
-      ubicacion: '',
+      id_area: areas[0]?.id_area || '',
       ultima_lectura: '',
       estado: 'ACTIVO'
     });
     setModalAbierto(false);
+  };
+
+  const handleCerrarModal = () => {
+    setModalAbierto(false);
+    setFormData({
+      codigo: '',
+      tipo_recurso: 'ENERGIA',
+      id_area: areas[0]?.id_area || '',
+      ultima_lectura: '',
+      estado: 'ACTIVO'
+    });
   };
 
   const getBadgeEstado = (estado) => {
@@ -198,8 +225,8 @@ export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
               <h3 className="font-bold flex items-center gap-2">
                 <PlusLg className="text-emerald-400" /> Registrar Nuevo Medidor
               </h3>
-              <button 
-                onClick={() => setModalAbierto(false)} 
+              <button
+                onClick={handleCerrarModal}
                 className="text-slate-400 hover:text-white cursor-pointer"
               >
                 <XLg />
@@ -208,7 +235,9 @@ export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
 
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Código del Dispositivo</label>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">
+                  Código del Dispositivo
+                </label>
                 <input
                   type="text"
                   name="codigo"
@@ -222,7 +251,9 @@ export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Tipo Recurso</label>
+                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">
+                    Tipo Recurso
+                  </label>
                   <select
                     name="tipo_recurso"
                     value={formData.tipo_recurso}
@@ -235,7 +266,9 @@ export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Estado Inicial</label>
+                  <label className="block text-xs font-bold uppercase text-slate-600 mb-1">
+                    Estado Inicial
+                  </label>
                   <select
                     name="estado"
                     value={formData.estado}
@@ -249,21 +282,38 @@ export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
                 </div>
               </div>
 
+              {/* ▼▼▼ CAMBIO: Ahora es un select con las áreas de la BD ▼▼▼ */}
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Ubicación / Sector</label>
-                <input
-                  type="text"
-                  name="ubicacion"
-                  required
-                  placeholder="Ej. Depósito Central"
-                  value={formData.ubicacion}
-                  onChange={handleChange}
-                  className="w-full border border-slate-300 rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500"
-                />
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1 flex items-center gap-1">
+                  <GeoAlt className="text-emerald-600" /> Ubicación / Área
+                </label>
+                {areas.length > 0 ? (
+                  <select
+                    name="id_area"
+                    required
+                    value={formData.id_area}
+                    onChange={handleChange}
+                    className="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                  >
+                    {areas.map((area) => (
+                      <option key={area.id_area} value={area.id_area}>
+                        {area.nombre}
+                        {!area.activo && ' (inactiva)'}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold rounded-lg">
+                    No hay áreas registradas. Ve a la pestaña <strong>Áreas</strong> y crea al menos una antes de registrar medidores.
+                  </div>
+                )}
               </div>
+              {/* ▲▲▲ FIN DEL CAMBIO ▲▲▲ */}
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">Lectura Inicial</label>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">
+                  Lectura Inicial
+                </label>
                 <input
                   type="number"
                   step="0.1"
@@ -279,14 +329,15 @@ export default function MedidoresPage({ medidores = [], onAgregarMedidor }) {
               <div className="pt-2 flex justify-end space-x-2">
                 <button
                   type="button"
-                  onClick={() => setModalAbierto(false)}
+                  onClick={handleCerrarModal}
                   className="px-4 py-2 border border-slate-300 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow transition cursor-pointer"
+                  disabled={areas.length === 0}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg text-xs font-bold shadow transition cursor-pointer"
                 >
                   Guardar Medidor
                 </button>

@@ -148,47 +148,46 @@ export default function App() {
       );
     }
   };
-  // ============ HANDLER: AGREGAR MEDIDOR ============
   const handleAgregarMedidor = async (nuevo) => {
-    try {
-      const id_recurso = resolverIdRecurso(nuevo.tipo_recurso, recursos);
-      const id_area = resolverIdArea(nuevo.ubicacion, areas);
+  try {
+    const id_recurso = resolverIdRecurso(nuevo.tipo_recurso, recursos);
 
-      if (!id_recurso) {
-        toast.error('No existe un recurso (Energía/Agua) en el backend.');
-        return;
-      }
-      if (!id_area) {
-        toast.error('No existe ninguna área en el backend.');
-        return;
-      }
-
-      // 1) Creamos el medidor
-      const { medidor } = await medidoresAPI.create({
-        id_recurso,
-        id_area,
-        codigo: nuevo.codigo,
-        nombre: nuevo.codigo, // usamos el código también como nombre
-        activo: nuevo.estado === 'ACTIVO'
-      });
-
-      // 2) Creamos la lectura inicial
-      if (nuevo.ultima_lectura !== undefined && nuevo.ultima_lectura !== '') {
-        await lecturasAPI.create({
-          id_medidor: medidor.id_medidor,
-          id_usuario: USUARIO_DEFAULT,
-          valor_lectura: Number(nuevo.ultima_lectura),
-          consumo: 0,
-          observacion: 'Lectura inicial'
-        });
-      }
-
-      toast.success(`Medidor ${nuevo.codigo} registrado exitosamente.`);
-      await cargarTodo();
-    } catch (error) {
-      toast.error(error.response?.data?.mensaje || 'Error al registrar medidor.');
+    if (!id_recurso) {
+      toast.error('No existe un recurso (Energía/Agua) en el backend.');
+      return;
     }
-  };
+
+    if (!nuevo.id_area) {
+      toast.error('Debes seleccionar un área.');
+      return;
+    }
+
+    // 1) Creamos el medidor
+    const { medidor } = await medidoresAPI.create({
+      id_recurso,
+      id_area: nuevo.id_area,      // ← ya viene del select
+      codigo: nuevo.codigo,
+      nombre: nuevo.codigo,
+      activo: nuevo.estado === 'ACTIVO'
+    });
+
+    // 2) Creamos la lectura inicial
+    if (nuevo.ultima_lectura !== undefined && nuevo.ultima_lectura !== '') {
+      await lecturasAPI.create({
+        id_medidor: medidor.id_medidor,
+        id_usuario: USUARIO_DEFAULT,
+        valor_lectura: Number(nuevo.ultima_lectura),
+        consumo: 0,
+        observacion: 'Lectura inicial'
+      });
+    }
+
+    toast.success(`Medidor ${nuevo.codigo} registrado exitosamente.`);
+    await cargarTodo();
+  } catch (error) {
+    toast.error(error.response?.data?.mensaje || 'Error al registrar medidor.');
+  }
+};
 
   // ============ HANDLER: ACTUALIZAR LECTURA ============
   const handleActualizarLectura = async (identificador, nuevoValor) => {
@@ -353,7 +352,7 @@ export default function App() {
 
         <main className="p-6 bg-slate-50">
           {activeTab === 'dashboard' && <DashboardPage medidores={medidores} />}
-          {activeTab === 'medidores' && <MedidoresPage medidores={medidores} onAgregarMedidor={handleAgregarMedidor} />}
+          {activeTab === 'medidores' && <MedidoresPage medidores={medidores} areas={areas} onAgregarMedidor={handleAgregarMedidor} />}
           {activeTab === 'carga' && <CargaLecturasPage medidores={medidores} onGuardarLectura={handleActualizarLectura} />}
           {activeTab === 'alertas' && <AlertasPage alertas={alertas} onCambiarEstado={handleCambiarEstadoAlerta} />}
           {activeTab === 'metas' && <MetasPage metas={metas} onAgregarMeta={handleAgregarMeta} />}
