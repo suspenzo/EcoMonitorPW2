@@ -25,6 +25,8 @@ const permisoRoutes = require('./Routes/PermisoRoutes');
 const recursoRoutes = require ('./Routes/RecursoRoutes');
 const rol_permisoRoutes = require ('./Routes/Rol_PermisoRoutes');
 const tarifaRoutes = require ('./Routes/TarifaRoutes');
+const umbralRoutes = require ('./Routes/UmbralRoutes');
+
 
 
 // Middleware para recibir JSON
@@ -52,6 +54,8 @@ app.use('/api/permisos', permisoRoutes);
 app.use('/api/recursos', recursoRoutes);
 app.use('/api/rol_permisos', rol_permisoRoutes);
 app.use('/api/tarifas', tarifaRoutes);
+app.use('/api/umbrales', umbralRoutes);
+
 
 // INICIAR SERVIDOR
 

@@ -27,3 +27,5 @@ export const rolPermisosAPI = {
     create: (data) => api.post('/rol-permisos', data).then(r => r.data),
     delete: (id_rol, id_permiso) => api.delete(`/rol-permisos/${id_rol}/${id_permiso}`).then(r => r.data)
 };
+
+export const umbralesAPI = crud('umbrales');

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+
 import {
   Speedometer2,
   LightningCharge,
@@ -8,6 +9,7 @@ import {
   Bullseye,
   PersonCircle,
   Tree,
+  Gear,
   Calculator,
   Building
 } from 'react-bootstrap-icons';
@@ -19,10 +21,12 @@ import AlertasPage from './pages/AlertasPage';
 import MetasPage from './pages/MetasPage';
 import SimuladorPage from './pages/SimuladorPage';
 import AreasPage from './pages/AreasPage';
+import AdminSettingsPage from './pages/AdminSettingsPage';
+
 
 import {
-  alertasAPI, areasAPI, lecturasAPI, medidoresAPI,
-  metasAPI, recursosAPI
+  alertasAPI, areasAPI, lecturasAPI, medidoresAPI, metasAPI, recursosAPI,
+  tarifasAPI, permisosAPI, rolesAPI, rolPermisosAPI, usuariosAPI, umbralesAPI
 } from './services/api';
 
 import {
@@ -47,6 +51,13 @@ export default function App() {
   const [areas, setAreas] = useState([]);
   const [lecturasCrudas, setLecturasCrudas] = useState([]);
 
+  const [tarifas, setTarifas] = useState([]);
+const [permisos, setPermisos] = useState([]);
+const [roles, setRoles] = useState([]);
+const [rolPermisos, setRolPermisos] = useState([]);
+const [usuarios, setUsuarios] = useState([]);
+const [umbrales, setUmbrales] = useState([]);
+
   const [cargando, setCargando] = useState(true);
 
   // ============ CARGA INICIAL ============
@@ -54,25 +65,35 @@ export default function App() {
     setCargando(true);
     try {
       const [
-        recursosData,
-        areasData,
-        medidoresData,
-        lecturasData,
-        alertasData,
-        metasData
+        recursosData, areasData, medidoresData, lecturasData, alertasData, metasData,
+        tarifasData, permisosData, rolesData, rolPermisosData, usuariosData, umbralesData
       ] = await Promise.all([
         recursosAPI.getAll(),
         areasAPI.getAll(),
         medidoresAPI.getAll(),
         lecturasAPI.getAll(),
         alertasAPI.getAll(),
-        metasAPI.getAll()
+        metasAPI.getAll(),
+        tarifasAPI.getAll(),
+        permisosAPI.getAll(),
+        rolesAPI.getAll(),
+        rolPermisosAPI.getAll(),
+        usuariosAPI.getAll(),
+        // Si el backend aún no tiene umbrales, envolvemos en catch para no romper todo:
+        umbralesAPI.getAll()
       ]);
 
       // Guardamos crudos
       setRecursos(recursosData);
       setAreas(areasData);
       setLecturasCrudas(lecturasData);
+      setTarifas(tarifasData);
+      setPermisos(permisosData);
+      setRoles(rolesData);
+      // Aseguramos una key única para la tabla (composite PK)
+      setRolPermisos(rolPermisosData.map(rp => ({ ...rp, id_rol_key: `${rp.id_rol}-${rp.id_permiso}` })));
+      setUsuarios(usuariosData);
+      setUmbrales(umbralesData);
 
       // Normalizamos
       const medidoresNorm = medidoresData.map(m =>
@@ -304,7 +325,8 @@ export default function App() {
     { id: 'carga', label: 'Carga Lecturas', icon: <BoxArrowInDown className="inline mr-2 text-base" /> },
     { id: 'alertas', label: 'Alertas', icon: <ExclamationTriangle className="inline mr-2 text-base" /> },
     { id: 'metas', label: 'Metas de Ahorro', icon: <Bullseye className="inline mr-2 text-base" /> },
-    { id: 'simulador', label: 'Simulador Tarifario', icon: <Calculator className="inline mr-2 text-base" /> }
+    { id: 'simulador', label: 'Simulador Tarifario', icon: <Calculator className="inline mr-2 text-base" /> },
+    { id: 'admin', label: 'Configuración', icon: <Gear className="inline mr-2 text-base" /> }  
   ];
 
   if (cargando) {
@@ -362,6 +384,22 @@ export default function App() {
                 onEliminarArea={handleEliminarArea}
               />
             )}
+            {activeTab === 'admin' && (
+                <AdminSettingsPage
+                  recursos={recursos}
+                  tarifas={tarifas}
+                  permisos={permisos}
+                  roles={roles}
+                  rolPermisos={rolPermisos}
+                  usuarios={usuarios}
+                  umbrales={umbrales}
+                  api={{
+                    recursosAPI, tarifasAPI, permisosAPI, rolesAPI,
+                    rolPermisosAPI, usuariosAPI, umbralesAPI
+                  }}
+                  onRefresh={cargarTodo}
+                />
+              )}
         </main>
       </div>
     </div>

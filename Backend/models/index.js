@@ -10,6 +10,8 @@ const Meta = require('./Meta');
 const Lectura = require('./Lectura');
 const Alerta = require('./Alerta');
 const Rol_Permiso = require('./Rol_Permiso');
+const Umbral = require('./Umbral');
+
 
 
 // USUARIO - N:1  - ROL
@@ -142,6 +144,8 @@ Rol.hasMany(Rol_Permiso, {
     foreignKey: 'id_rol'
 });
 
+Umbral.hasMany(Medidor, { foreignKey: 'id_umbral' });
+Medidor.belongsTo(Umbral, { foreignKey: 'id_umbral' });
 
 
 module.exports = {
@@ -156,5 +160,6 @@ module.exports = {
     Meta,
     Lectura,
     Alerta,
-    Rol_Permiso
+    Rol_Permiso,
+    Umbral
 };
